@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { parse, ParseResult } from 'papaparse';
 import './FinanceApp.css'; // Archivo de estilos que crearemos después
+import { format, parse as dateParse } from 'date-fns';
+import { es } from 'date-fns/locale';
 
 // Definimos el tipo para nuestras transacciones
 interface Transaction {
@@ -107,10 +109,15 @@ const FinanceApp: React.FC = () => {
 
   // Formatear número como dinero
   const formatMoney = (amount: number): string => {
-    return new Intl.NumberFormat('es-ES', {
+    return new Intl.NumberFormat('es-Mx', {
       style: 'currency',
       currency: 'MXN'
     }).format(amount);
+  };
+
+  const formatDisplayDate = (dateString: string): string => {
+    const date = dateParse(dateString, 'dd-MM-yyyy', new Date());
+    return format(date, 'EEEE d MMMM yyyy', { locale: es });
   };
 
   if (loading) return <div className="loading">Cargando datos financieros...</div>;
@@ -180,7 +187,9 @@ const FinanceApp: React.FC = () => {
 
         {/* Lista de transacciones */}
         <div className="transactions">
-          <h2>Transacciones {dateFilter || (startDate && endDate ? `entre ${startDate} y ${endDate}` : '')}</h2>
+          <h2>Transacciones</h2>
+          <h2>{dateFilter ? formatDisplayDate(dateFilter.split('-').reverse().join('-')) 
+                          : (startDate && endDate ? `${formatDisplayDate(startDate.split('-').reverse().join('-'))} a ${formatDisplayDate(endDate.split('-').reverse().join('-'))}` : '')}</h2>
 
           {filteredTransactions.length === 0 ? (
               <p>No hay transacciones en este período</p>
@@ -198,11 +207,11 @@ const FinanceApp: React.FC = () => {
                 <tbody>
                 {filteredTransactions.map((t, index) => (
                     <tr key={index}>
-                      <td>{t.date}</td>
-                      <td>{t.description}</td>
-                      <td>{t.payment}</td>
-                      <td className={t.type}>{t.type}</td>
-                      <td className={t.type}>
+                      <td data-label="Fecha">{formatDisplayDate(t.date)}</td>
+                      <td data-label="Descripción">{t.description}</td>
+                      <td data-label="Tipo de pago">{t.payment}</td>
+                      <td data-label="Tipo" className={t.type}>{t.type}</td>
+                      <td data-label="Monto" className={t.type}>
                         {t.type === 'gasto' ? '-' : '+'}{formatMoney(parseFloat(t.price))}
                       </td>
                     </tr>
