@@ -188,8 +188,11 @@ const FinanceApp: React.FC = () => {
         {/* Lista de transacciones */}
         <div className="transactions">
           <h2>Transacciones</h2>
-          <h2>{dateFilter ? formatDisplayDate(dateFilter.split('-').reverse().join('-')) 
-                          : (startDate && endDate ? `${formatDisplayDate(startDate.split('-').reverse().join('-'))} a ${formatDisplayDate(endDate.split('-').reverse().join('-'))}` : '')}</h2>
+          <h3>
+            {dateFilter 
+            ? formatDisplayDate(dateFilter.split('-').reverse().join('-')) 
+            : (startDate && endDate ? `${formatDisplayDate(startDate.split('-').reverse().join('-'))} a ${formatDisplayDate(endDate.split('-').reverse().join('-'))}` : '')}
+          </h3>
 
           {filteredTransactions.length === 0 ? (
               <p>No hay transacciones en este período</p>
@@ -210,7 +213,7 @@ const FinanceApp: React.FC = () => {
                       <td data-label="Fecha">{formatDisplayDate(t.date)}</td>
                       <td data-label="Descripción">{t.description}</td>
                       <td data-label="Tipo de pago">{t.payment}</td>
-                      <td data-label="Tipo" className={t.type}>{t.type}</td>
+                      <td data-label="Tipo" className={t.type}>{t.type === 'gasto' ? 'Gasto' : 'Venta'}</td>
                       <td data-label="Monto" className={t.type}>
                         {t.type === 'gasto' ? '-' : '+'}{formatMoney(parseFloat(t.price))}
                       </td>
