@@ -3,6 +3,7 @@ import { parse, ParseResult } from 'papaparse';
 import './FinanceApp.css'; // Archivo de estilos que crearemos después
 import { format, parse as dateParse } from 'date-fns';
 import { es } from 'date-fns/locale';
+import { getFinancialAdvice } from './components/GoogleGemini'; // Importamos nuestra función de AI
 
 // Definimos el tipo para nuestras transacciones
 interface Transaction {
@@ -29,6 +30,7 @@ const FinanceApp: React.FC = () => {
   const [startDate, setStartDate] = useState<string>('');
   const [endDate, setEndDate] = useState<string>('');
   const [summary, setSummary] = useState<Summary>({ totalGastos: 0, totalVentas: 0, balance: 0 });
+  const [responseGemini, setResponseGemini] = useState<string | null>(null);
 
   // Cargar datos del Google Sheet
   useEffect(() => {
@@ -194,6 +196,42 @@ const FinanceApp: React.FC = () => {
             : (startDate && endDate ? `${formatDisplayDate(startDate.split('-').reverse().join('-'))} a ${formatDisplayDate(endDate.split('-').reverse().join('-'))}` : '')}
           </h3>
 
+        {filteredTransactions.length > 0 && (
+          <div className="w-full max-w-2xl mx-auto mt-8 p-4 rounded-xl bg-white shadow-lg border">
+            <button
+              className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-full transition duration-200 w-full"
+              onClick={async () => {
+                const advice = await getFinancialAdvice(
+                  summary.totalVentas,
+                  summary.totalGastos,
+                  summary.balance,
+                  filteredTransactions,
+                  dateFilter || `${startDate} a ${endDate}`
+                );
+                setResponseGemini(advice || "No se pudo generar la asesoría.");
+              }}
+            >
+              💡 Obtener asesoría financiera
+            </button>
+
+            {responseGemini && (
+              <div className="mt-6 space-y-4">
+                <div className="flex items-start space-x-3">
+                  <div className="bg-gray-100 text-gray-800 p-4 rounded-xl shadow-sm max-w-xl">
+                    <p className="whitespace-pre-line">
+                      {responseGemini
+                        .split(/\n+/)
+                        .map((line, idx) => (
+                          <p key={idx}>{line}</p>
+                        ))}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+        
           {filteredTransactions.length === 0 ? (
               <p>No hay transacciones en este período</p>
           ) : (
