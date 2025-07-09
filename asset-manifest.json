@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/valance-chivis/static/css/main.fc46d967.css",
-    "main.js": "/valance-chivis/static/js/main.6cc64d34.js",
+    "main.css": "/valance-chivis/static/css/main.a7a95be3.css",
+    "main.js": "/valance-chivis/static/js/main.e1410215.js",
     "static/js/453.04552482.chunk.js": "/valance-chivis/static/js/453.04552482.chunk.js",
     "index.html": "/valance-chivis/index.html",
-    "main.fc46d967.css.map": "/valance-chivis/static/css/main.fc46d967.css.map",
-    "main.6cc64d34.js.map": "/valance-chivis/static/js/main.6cc64d34.js.map",
+    "main.a7a95be3.css.map": "/valance-chivis/static/css/main.a7a95be3.css.map",
+    "main.e1410215.js.map": "/valance-chivis/static/js/main.e1410215.js.map",
     "453.04552482.chunk.js.map": "/valance-chivis/static/js/453.04552482.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.fc46d967.css",
-    "static/js/main.6cc64d34.js"
+    "static/css/main.a7a95be3.css",
+    "static/js/main.e1410215.js"
   ]
 }
